@@ -6,8 +6,43 @@
     line-height: 42px;
     margin-bottom: 12px;
 }
+    .panel .title {
+        margin-left: 24px;
+        font-weight: bold;
+    }
 
-.panel .title {
-    margin-left: 24px;
-    font-weight: bold;
+
+.index {
+    width: 30%;
+    float: left;
+}
+
+.main {
+    width: 70%;
+    float: left;
+}
+
+
+.parts:hover {
+    color: #1b6d85;
+}
+
+.index td {
+    font-size: smaller;
+}
+
+.index td.words {
+    width: 60px;
+}
+
+.index td.tests {
+    width: 60px;
+}
+
+.index td span:hover {
+    color: #0ca2ff;
+}
+
+.index td span {
+    cursor: pointer;
 }
