@@ -75,6 +75,14 @@ table.test-list {
     padding: 4px;
 }
 
+th.i {
+    border-radius: 8px 0 0 0;
+}
+
+th.dst {
+    border-radius: 0 8px 0 0;
+}
+
 td.i {
     width: 36px;
     font-weight: bolder;
@@ -83,7 +91,7 @@ td.i {
 }
 
 td.src, td.dst {
-    width: calc(50% - 72px);
+    width: 264px;
 }
 
 th.result, td.result {
