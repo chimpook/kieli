@@ -34,25 +34,34 @@ var app = {
         var self = this;
         var number = $(object).attr("data-number") - 1;
         var mode = self.mode.get();
+        var part = self.parts[number];
+        var data = self.parts[number][entity];
+        var content = "";
+
         switch(mode.name) {
+
             case "view":
-                var part = self.parts[number];
-                var data = self.parts[number][entity];
-                var content = "<table class='view-list'><tr><th>N</th><th>ru</th><th>fi</th></tr>";
+                content = "<table class='view-list'><tr><th>N</th><th>ru</th><th>fi</th></tr>";
                 data.forEach(function(el, i, data){
                     content += "<tr><td>" + (i + 1) + "</td><td>" + el.ru + "</td><td>" + el.fi + "</td></tr>";
                 });
                 content += "</table>";
-                $(".main").html(content);
                 break;
 
             case "test":
-                console.log("Тестируем");
+                content = "<table class='view-list'><tr><th>N</th><th>ru</th><th>fi</th></tr>";
+                data.forEach(function(el, i, data){
+                    content += "<tr><td>" + (i + 1) + "</td><td>" + el.ru + "</td><td>" + el.fi + "</td></tr>";
+                });
+                content += "</table>";
                 break;
 
             default:
                 break;
         }
+
+        $(".main").html(content);
+
     },
 
     processDebug: function() {

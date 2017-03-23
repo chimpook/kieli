@@ -58,7 +58,7 @@
     cursor: pointer;
 }
 
-.view-list table {
+table.view-list {
     width: 600px;
 }
 .view-list th {
@@ -72,4 +72,7 @@
 }
 .view-list tr:nth-child(even) td {
     background: rgba(0, 255, 0, 0.1);
+}
+.view-list tr:hover td {
+    background: rgba(255, 255, 204, 0.9);
 }
