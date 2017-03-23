@@ -57,6 +57,22 @@ var app = {
 
     processDebug: function() {
         console.log("DEBUG");
+        var self = this;
+        self.testSynthesis();
+    },
+
+    testSynthesis: function() {
+        if ('speechSynthesis' in window) {
+            // Synthesis support. Make your web apps talk!
+            console.log("YES");
+
+            var msg = new SpeechSynthesisUtterance('I see dead people!');
+            //msg.voice = speechSynthesis.getVoices().filter(function(voice) { return voice.name == 'Whisper'; })[0];
+            speechSynthesis.speak(msg);
+
+        } else {
+            console.log("NO");
+        }
     },
 
     selectMode: function(object, self) {
