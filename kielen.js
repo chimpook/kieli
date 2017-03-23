@@ -19,7 +19,44 @@ var app = {
         self.buildIndex();
         self.initButtons();
         self.displayMode();
+        self.initInputsWords();
 
+    },
+
+    initInputsWords: function() {
+        var self = this;
+
+        $(".main").on("change", "input.words", function() {
+            var number = $(this).attr("data-number");
+            var i = $(this).attr("data-i");
+            var td_result = $(".main .test-list tr.i_" + i + " td:last-child");
+
+            if (self.checkWord(this)) {
+                td_result.html("<span class='result-ok glyphicon glyphicon-ok-sign'></span>");
+                i++;
+                $(".main tr.i_" + i + " input").focus();
+
+            } else {
+                td_result.html("<span class='result-fail glyphicon glyphicon-remove-sign' title='"
+                    + self.parts[number].words[i].fi + "'></span>");
+            }
+        });
+    },
+
+    checkWord: function(object) {
+        var self = this;
+        var value = object.value;
+        var number = $(object).attr("data-number");
+        var i = $(object).attr("data-i");
+        var result = false;
+
+        var word = self.parts[number].words[i].fi;
+
+        if (value === word) {
+            result = true;
+        }
+
+        return result;
     },
 
     displayMode: function() {
@@ -27,7 +64,6 @@ var app = {
         var mode = self.mode.get().name;
         $("button.mode-selector").css("border", "none");
         $("button[name=" + mode + "_mode]").css("border", "2px solid darkgreen");
-        //console.log(mode + "mode selected");
     },
 
     processPart: function(object, entity) {
@@ -37,31 +73,34 @@ var app = {
         var part = self.parts[number];
         var data = self.parts[number][entity];
         var content = "";
+        var main = $(".main");
 
         switch(mode.name) {
 
             case "view":
-                content = "<table class='view-list'><tr><th>N</th><th>ru</th><th>fi</th></tr>";
+                content = "<table class='view-list'><tr><th class='i'>N</th><th class='src'>ru</th><th class='dst'>fi</th></tr>";
                 data.forEach(function(el, i, data){
-                    content += "<tr><td>" + (i + 1) + "</td><td>" + el.ru + "</td><td>" + el.fi + "</td></tr>";
+                    content += "<tr class='i_" + i + "'><td class='i'><span class='label label-success'>" + (i + 1) + "</span></td><td class='src'>" + el.ru + "</td><td class='dst'>" + el.fi + "</td></tr>";
                 });
                 content += "</table>";
+                main.html(content);
                 break;
 
             case "test":
-                content = "<table class='view-list'><tr><th>N</th><th>ru</th><th>fi</th></tr>";
+                content = "<table class='test-list'><tr><th class='i'>N</th><th class='src'>ru</th><th class='dst'>fi</th><th class='result'></th></tr>";
                 data.forEach(function(el, i, data){
-                    content += "<tr><td>" + (i + 1) + "</td><td>" + el.ru + "</td><td>" + el.fi + "</td></tr>";
+                    content += "<tr class='i_" + i + "'><td class='i'><span class='label label-success'>" + (i + 1) + "</span></td><td class='src'>" + el.ru
+                        + "</td><td class='dst'><input class='words' type='text' data-number='" + number + "' data-i='" + i + "'/></td>"
+                    + "<td class='result'></td></tr>";
                 });
                 content += "</table>";
+                main.html(content);
+                $(".test-list tr.i_0 input").focus();
                 break;
 
             default:
                 break;
         }
-
-        $(".main").html(content);
-
     },
 
     processDebug: function() {
@@ -137,7 +176,7 @@ var app = {
                 {name: "view"},
                 {name: "test"}
             ],
-            selected: 0
+            selected: 1
         },
 
         get: function() {

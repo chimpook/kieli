@@ -58,21 +58,58 @@
     cursor: pointer;
 }
 
-table.view-list {
+table.view-list,
+table.test-list {
     width: 600px;
 }
-.view-list th {
+
+.view-list th,
+.test-list th {
     background: darkseagreen;
     padding: 8px;
     font-weight: bold;
     color: white;
 }
-.view-list td {
+.view-list td,
+.test-list td {
     padding: 4px;
 }
-.view-list tr:nth-child(even) td {
+
+td.i {
+    width: 36px;
+    font-weight: bolder;
+    color: #5e5e5e;
+    text-align: center;
+}
+
+td.src, td.dst {
+    width: calc(50% - 72px);
+}
+
+th.result, td.result {
+    width: 36px;
+    background: none;
+}
+
+
+.main tr:nth-child(even) td.i,
+.main tr:nth-child(even) td.src,
+.main tr:nth-child(even) td.dst {
     background: rgba(0, 255, 0, 0.1);
 }
-.view-list tr:hover td {
-    background: rgba(255, 255, 204, 0.9);
+
+.main tr:hover td.i span{
+    background: orangered;
+}
+
+.test-list input {
+    width: 100%;
+}
+
+.result-ok {
+    color: forestgreen;
+}
+
+.result-fail {
+    color: firebrick;
 }
