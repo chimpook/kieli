@@ -30,14 +30,33 @@ var app = {
         //console.log(mode + "mode selected");
     },
 
-    processWords: function(object) {
-        var number = $(object).attr("data-number");
-        //console.log(number);
+    processPart: function(object, entity) {
+        var self = this;
+        var number = $(object).attr("data-number") - 1;
+        var mode = self.mode.get();
+        switch(mode.name) {
+            case "view":
+                var part = self.parts[number];
+                var data = self.parts[number][entity];
+                var content = "<table class='view-list'><tr><th>N</th><th>ru</th><th>fi</th></tr>";
+                data.forEach(function(el, i, data){
+                    content += "<tr><td>" + (i + 1) + "</td><td>" + el.ru + "</td><td>" + el.fi + "</td></tr>";
+                });
+                content += "</table>";
+                $(".main").html(content);
+                break;
+
+            case "test":
+                console.log("Тестируем");
+                break;
+
+            default:
+                break;
+        }
     },
 
-    processTests: function(object) {
-        var number = $(object).attr("data-number");
-        //console.log(number);
+    processDebug: function() {
+        console.log("DEBUG");
     },
 
     selectMode: function(object, self) {
@@ -48,9 +67,10 @@ var app = {
 
     initButtons: function() {
         var self = this;
-        $(".index td.words span").on("click", function() {self.processWords(this);});
-        $(".index td.tests span").on("click", function() {self.processTests(this);});
-        $(".mode-selector").on("click", function() {self.selectMode(this, self)});
+        $(".index td.words span").on("click", function() {self.processPart(this, "words");});
+        $(".index td.tests span").on("click", function() {self.processPart(this, "tests");});
+        $(".mode-selector").on("click", function() {self.selectMode(this, self);});
+        $("button[name=debug]").on("click", function() {self.processDebug();});
     },
 
     buildIndex: function() {

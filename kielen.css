@@ -16,6 +16,12 @@
         margin-bottom: 2px;
     }
 
+    .top button[name=debug] {
+        float: right;
+        margin-right: 24px;
+        margin-top: 4px;
+    }
+
 .index {
     width: calc(30% - 16px);
     float: left;
@@ -50,4 +56,20 @@
 
 .index td span {
     cursor: pointer;
+}
+
+.view-list table {
+    width: 600px;
+}
+.view-list th {
+    background: darkseagreen;
+    padding: 8px;
+    font-weight: bold;
+    color: white;
+}
+.view-list td {
+    padding: 4px;
+}
+.view-list tr:nth-child(even) td {
+    background: rgba(0, 255, 0, 0.1);
 }
