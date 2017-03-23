@@ -13,8 +13,9 @@
 
 
 .index {
-    width: 30%;
+    width: calc(30% - 16px);
     float: left;
+    margin-left: 16px;
 }
 
 .main {
