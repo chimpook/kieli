@@ -18,23 +18,39 @@ var app = {
 
         self.buildIndex();
         self.initButtons();
+        self.displayMode();
 
+    },
+
+    displayMode: function() {
+        var self = this;
+        var mode = self.mode.get().name;
+        $("button.mode-selector").css("border", "none");
+        $("button[name=" + mode + "_mode]").css("border", "2px solid darkgreen");
+        //console.log(mode + "mode selected");
     },
 
     processWords: function(object) {
         var number = $(object).attr("data-number");
-        console.log(number);
+        //console.log(number);
     },
 
     processTests: function(object) {
         var number = $(object).attr("data-number");
-        console.log(number);
+        //console.log(number);
+    },
+
+    selectMode: function(object, self) {
+        var mode = $(object).attr("data-mode");
+        self.mode.set(mode);
+        self.displayMode();
     },
 
     initButtons: function() {
         var self = this;
         $(".index td.words span").on("click", function() {self.processWords(this);});
         $(".index td.tests span").on("click", function() {self.processTests(this);});
+        $(".mode-selector").on("click", function() {self.selectMode(this, self)});
     },
 
     buildIndex: function() {
@@ -68,6 +84,27 @@ var app = {
 
         index.html(index_content);
     },
+
+    mode: {
+
+        data: {
+            modes: [
+                {name: "view"},
+                {name: "test"}
+            ],
+            selected: 0
+        },
+
+        get: function() {
+            return this.data.modes[this.data.selected];
+        },
+
+        set: function(mode) {
+            this.data.selected = mode;
+        }
+
+    },
+
 
     parts: [
         {
