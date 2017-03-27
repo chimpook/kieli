@@ -20,6 +20,7 @@ var app = {
         self.initButtons();
         self.displayMode();
         self.initInputsWords();
+        self.initInputsTests();
 
     },
 
@@ -59,6 +60,43 @@ var app = {
         return result;
     },
 
+    initInputsTests: function() {
+        var self = this;
+
+        $(".main").on("change", "input.tests", function() {
+            var number = $(this).attr("data-number");
+            var i = $(this).attr("data-i");
+            var td_result = $(".main .test-list tr.i_" + i + " td:last-child");
+
+            if (self.checkTest(this)) {
+                td_result.html("<span class='result-ok glyphicon glyphicon-ok-sign'></span>");
+                i++;
+                $(".main tr.i_" + i + " input").focus();
+
+            } else {
+                td_result.html("<span class='result-fail glyphicon glyphicon-remove-sign' title='"
+                    + self.parts[number].tests[i].fi + "'></span>");
+            }
+        });
+    },
+
+    checkTest: function(object) {
+        var self = this;
+        var value = object.value;
+        var number = $(object).attr("data-number");
+        var i = $(object).attr("data-i");
+        var result = false;
+
+        var word = self.parts[number].tests[i].fi;
+
+        if (value === word) {
+            result = true;
+        }
+
+        return result;
+    },
+
+
     displayMode: function() {
         var self = this;
         var mode = self.mode.get().name;
@@ -90,7 +128,7 @@ var app = {
                 content = "<table class='test-list'><tr><th class='i'>N</th><th class='src'>ru</th><th class='dst'>fi</th><th class='result'></th></tr>";
                 data.forEach(function(el, i, data){
                     content += "<tr class='i_" + i + "'><td class='i'><span class='label label-success'>" + (i + 1) + "</span></td><td class='src'>" + el.ru
-                        + "</td><td class='dst'><input class='words' type='text' data-number='" + number + "' data-i='" + i + "'/></td>"
+                        + "</td><td class='dst'><input class='" + entity + "' type='text' data-number='" + number + "' data-i='" + i + "'/></td>"
                     + "<td class='result'></td></tr>";
                 });
                 content += "</table>";
