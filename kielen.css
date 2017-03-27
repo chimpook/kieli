@@ -38,20 +38,29 @@
     color: #1b6d85;
 }
 
+.index th,
 .index td {
-    font-size: smaller;
+    /*font-size: smaller;*/
+    padding: 4px;
 }
 
+.index td.number {
+    color: brown;
+    text-align: center;
+}
 .index td.words {
     width: 60px;
+    text-align: center;
 }
 
 .index td.tests {
     width: 60px;
+    text-align: center;
 }
 
 .index td span:hover {
     color: #0ca2ff;
+    font-weight: bolder;
 }
 
 .index td span {

@@ -144,23 +144,28 @@ var app = {
         var index = $(".index");
 
         var index_content = "<table>";
+
+        index_content += "<tr><th>№</th><th>Слова</th><th>Тесты</th><th>Тема</th></tr>";
+
         self.parts.forEach(function(part, i, parts) {
 
             index_content += "<tr class='parts'>";
 
+            index_content += "<td class='number'>" + (i + 1) + "</td>";
+
             index_content += "<td class='words'>";
             if (part.words.length > 0) {
-                index_content += "<span data-number='" + part.number + "'>words: " + part.words.length + "</span>";
+                index_content += "<span data-number='" + part.number + "'>" + part.words.length + "</span>";
             }
             index_content += "</td>";
 
             index_content += "<td class='tests'>";
             if (part.tests.length > 0) {
-                index_content += "<span data-number='" + part.number + "'>tests: " + part.tests.length + "</span>";
+                index_content += "<span data-number='" + part.number + "'>" + part.tests.length + "</span>";
             }
             index_content += "</td>";
 
-            index_content += "<th>" + part.comment.ru + "</th>";
+            index_content += "<td>" + part.comment.ru + "</td>";
 
             index_content += "</tr>";
         });
