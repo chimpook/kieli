@@ -96,7 +96,6 @@ var app = {
         return result;
     },
 
-
     displayMode: function() {
         var self = this;
         var mode = self.mode.get().name;
@@ -164,13 +163,15 @@ var app = {
     selectMode: function(object, self) {
         var mode = $(object).attr("data-mode");
         self.mode.set(mode);
+        self.buildIndex();
         self.displayMode();
     },
 
     initButtons: function() {
         var self = this;
-        $(".index td.words span").on("click", function() {self.processPart(this, "words");});
-        $(".index td.tests span").on("click", function() {self.processPart(this, "tests");});
+        $(".index")
+            .on("click", "td.words span", function() {self.processPart(this, "words");})
+            .on("click", " td.tests span", function() {self.processPart(this, "tests");});
         $(".mode-selector").on("click", function() {self.selectMode(this, self);});
         $("button[name=debug]").on("click", function() {self.processDebug();});
     },
@@ -178,38 +179,101 @@ var app = {
     buildIndex: function() {
 
         var self = this;
-
         var index = $(".index");
+        var main = $(".main");
+        var mode = self.mode.data.selected.toString();
+        var index_content = "";
+        var collection = [];
 
-        var index_content = "<table>";
+        main.html("");
 
-        index_content += "<tr><th>№</th><th>Слова</th><th>Тесты</th><th>Тема</th></tr>";
+        switch(mode) {
+            case "0":
+            case "1":
+                index_content = "<table>";
 
-        self.parts.forEach(function(part, i, parts) {
+                index_content += "<tr><th>№</th><th>Слова</th><th>Тесты</th><th>Тема</th></tr>";
 
-            index_content += "<tr class='parts'>";
+                self.parts.forEach(function(part, i, parts) {
 
-            index_content += "<td class='number'>" + (i + 1) + "</td>";
+                    index_content += "<tr class='parts'>";
 
-            index_content += "<td class='words'>";
-            if (part.words.length > 0) {
-                index_content += "<span data-number='" + part.number + "'>" + part.words.length + "</span>";
-            }
-            index_content += "</td>";
+                    index_content += "<td class='number'>" + (i + 1) + "</td>";
 
-            index_content += "<td class='tests'>";
-            if (part.tests.length > 0) {
-                index_content += "<span data-number='" + part.number + "'>" + part.tests.length + "</span>";
-            }
-            index_content += "</td>";
+                    index_content += "<td class='words'>";
+                    if (part.words.length > 0) {
+                        index_content += "<span data-number='" + part.number + "'>" + part.words.length + "</span>";
+                    }
+                    index_content += "</td>";
 
-            index_content += "<td>" + part.comment.ru + "</td>";
+                    index_content += "<td class='tests'>";
+                    if (part.tests.length > 0) {
+                        index_content += "<span data-number='" + part.number + "'>" + part.tests.length + "</span>";
+                    }
+                    index_content += "</td>";
 
-            index_content += "</tr>";
-        });
-        index_content += "</table>";
+                    index_content += "<td class='comment'>" + part.comment.ru + "</td>";
 
+                    index_content += "</tr>";
+                });
+                index_content += "</table>";
+                break;
+
+            case "2":
+                index_content = "<table>";
+                index_content += "<tr><th>№</th><th>Выборка по 50</th></tr>";
+                collection = self.collectWords(50);
+                collection.forEach(function(selection, s, selections){
+                    index_content += "<tr><td class='number'>" + selection[0].index + "..." + selection[49].index + "</td>"
+                        + "<td>" + selection[0].data.ru + "..." + selection[49].data.ru + "</td></tr>";
+                });
+                index_content += "</table>";
+                console.log(collection);
+                break;
+
+            case "3":
+                index_content = "<table>";
+                index_content += "<tr><th>№</th><th>Выборка по 100</th></tr>";
+                collection = self.collectWords(100);
+                collection.forEach(function(selection, s, selections){
+                    index_content += "<tr><td class='number'>" + selection[0].index + "..." + selection[99].index + "</td>"
+                        + "<td>" + selection[0].data.ru + "..." + selection[99].data.ru + "</td></tr>";
+                });
+                index_content += "</table>";
+                console.log(collection);
+                break;
+
+            default:
+                break;
+        }
         index.html(index_content);
+
+    },
+
+    collectWords: function(len) {
+        var self = this;
+        var i = 0;
+        var j = 0;
+        var collection = [];
+        var selection = [];
+
+        self.parts.forEach(function(part, p, parts) {
+            part.words.forEach(function(word, w, words){
+                 selection[j] = {
+                     part: p,
+                     word: w,
+                     index: (i * len + j + 1),
+                     data: word
+                 };
+                if (++j >= len) {
+                    collection[i] = selection;
+                    selection = [];
+                    j = 0;
+                    i++;
+                }
+            });
+        });
+        return collection;
     },
 
     mode: {
@@ -217,7 +281,9 @@ var app = {
         data: {
             modes: [
                 {name: "view"},
-                {name: "test"}
+                {name: "test"},
+                {name: "test50"},
+                {name: "test100"}
             ],
             selected: 1
         },

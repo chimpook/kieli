@@ -23,13 +23,13 @@
     }
 
 .index {
-    width: calc(30% - 16px);
+    width: calc(40% - 16px);
     float: left;
     margin-left: 16px;
 }
 
 .main {
-    width: 70%;
+    width: 60%;
     float: left;
 }
 
@@ -47,6 +47,7 @@
 .index td.number {
     color: brown;
     text-align: center;
+    width: 24px;
 }
 .index td.words {
     width: 60px;
@@ -56,6 +57,12 @@
 .index td.tests {
     width: 60px;
     text-align: center;
+}
+
+.index td.comment {
+    width: 300px;
+    text-align: center;
+    background: orange;
 }
 
 .index td span:hover {
