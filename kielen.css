@@ -103,6 +103,11 @@ th.result, td.result { width: 36px; background: none; }
         width: 650px;
         float: left;
     }
+    .dict-panel .result {
+        margin-bottom: 12px;
+        width: 650px;
+        float: left;
+    }
 
 /* Прогресс тестирования по словарю */
 .dict-progress { width: 650px; background: aliceblue; }
@@ -113,11 +118,23 @@ th.result, td.result { width: 36px; background: none; }
         vertical-align: middle;
         margin: 4px 0 0 4px;
     }
+    .dict-progress .word5 {
+        width: 128px;
+        height: 128px;
+        line-height: 128px;
+        font-size: 126px;
+    }
     .dict-progress .word50 {
         width: 64px;
         height: 64px;
         line-height: 64px;
         font-size: 62px;
+    }
+    .dict-progress .word100 {
+        width: 48px;
+        height: 48px;
+        line-height: 48px;
+        font-size: 46px;
     }
     .dict-progress .pending { color: lightgray; }
     .dict-progress .good {color: forestgreen; }

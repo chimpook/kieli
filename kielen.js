@@ -34,6 +34,7 @@ var app = {
             var value = $(this).val();
             var tip = $(".main .dict-panel .tip");
             var dict_word = $("#dict-word-" + self.test.index);
+            var dict_panel = $(".dict-panel");
 
             tip.text(self.test.sequence[self.test.index].data.fi);
 
@@ -48,7 +49,24 @@ var app = {
                 }
 
                 self.test.counter = 0;
-                self.test.index ++;
+
+                if (self.test.index == (self.test.len - 1)) {
+                    switch (self.test.result) {
+                        case "fail":
+                            dict_panel.html("<span class='result label label-danger'>Тест не пройден</span>");
+                            break;
+                        case "so-so":
+                            dict_panel.html("<span class='result label label-warning'>Тест частично пройден</span>");
+                            break;
+                        case "good":
+                        default:
+                            dict_panel.html("<span class='result label label-success'>Тест пройден</span>");
+                            break;
+                    }
+                } else {
+                    console.log(self.test.len + " : " + self.test.index);
+                    self.test.index ++;
+                }
 
             } else {
 
@@ -72,6 +90,7 @@ var app = {
                         dict_word.html("<span class='glyphicon glyphicon-remove-sign'></span>");
                         dict_word.removeClass("pending").addClass("fail");
                         self.test.counter = 0;
+                        self.test.result = "fail";
                         self.test.index ++;
                         break;
                 }
@@ -157,21 +176,19 @@ var app = {
 
     displayMode: function() {
         var self = this;
-        var mode = self.mode.get().name;
         $("button.mode-selector").css("border", "none");
-        $("button[name=" + mode + "_mode]").css("border", "2px solid darkgreen");
+        $("button[name=" + self.mode + "_mode]").css("border", "2px solid darkgreen");
     },
 
     processPart: function(object, entity) {
         var self = this;
         var number = $(object).attr("data-number") - 1;
-        var mode = self.mode.get();
         var part = self.parts[number];
         var data = self.parts[number][entity];
         var content = "";
         var main = $(".main");
 
-        switch(mode.name) {
+        switch(self.mode) {
 
             case "view":
                 content = "<table class='view-list'><tr><th class='i'>N</th><th class='src'>ru</th><th class='dst'>fi</th></tr>";
@@ -220,8 +237,7 @@ var app = {
     },
 
     selectMode: function(object, self) {
-        var mode = $(object).attr("data-mode");
-        self.mode.set(mode);
+        self.mode = $(object).attr("data-mode");
         self.buildIndex();
         self.displayMode();
     },
@@ -231,7 +247,9 @@ var app = {
         $(".index")
             .on("click", "td.words span", function() {self.processPart(this, "words");})
             .on("click", " td.tests span", function() {self.processPart(this, "tests");})
-            .on("click", "td.words50 span", function() {self.processDict(this); $(".dict-panel input").focus(); });
+            .on("click", "td.dict5 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
+            .on("click", "td.dict50 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
+            .on("click", "td.dict100 span", function() {self.processDict(this); $(".dict-panel input").focus(); });
         $(".mode-selector").on("click", function() {self.selectMode(this, self);});
         $("button[name=debug]").on("click", function() {self.processDebug();});
     },
@@ -243,6 +261,7 @@ var app = {
         var len = $(object).attr('data-len');
 
         self.test.sequence = self.dictionary[number];
+        self.test.len = len;
         self.test.index = 0;
         self.test.counter = 0;
         self.test.fail = 0;
@@ -272,17 +291,17 @@ var app = {
         var self = this;
         var index = $(".index");
         var main = $(".main");
-        var mode = self.mode.data.selected.toString();
         var content = "";
 
         main.html("");
 
-        switch(mode) {
-            case "0":
+        switch(self.mode) {
+
+            case "view":
 
                 // Содержание для просмотра разделов
 
-            case "1":
+            case "test":
 
                 // Содержание для тестирования по разделам
 
@@ -315,7 +334,23 @@ var app = {
                 content += "</table>";
                 break;
 
-            case "2":
+            case "dict5":
+
+                // Содержание для тестирования по 5 слов
+                
+                content = "<table>";
+                content += "<tr><th class='number'>№</th><th class='comment'>Выборка по 5</th></tr>";
+                self.buildDictionary(5);
+                self.dictionary.forEach(function(selection, s, selections){
+                    content += "<tr>"
+                        + "<td class='number dict5'><span data-len='5' data-number='" + s + "'>" + selection[0].index + "..." + selection[4].index + "</span></td>"
+                        + "<td class='comment dict5'><span data-len='5' data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[4].data.ru + "</span></td>"
+                        + "</tr>";
+                });
+                content += "</table>";
+                break;
+
+            case "dict50":
 
                 // Содержание для тестирования по 50 слов
 
@@ -324,14 +359,14 @@ var app = {
                 self.buildDictionary(50);
                 self.dictionary.forEach(function(selection, s, selections){
                     content += "<tr>"
-                        + "<td class='number words50'><span data-len='50' data-number='" + s + "'>" + selection[0].index + "..." + selection[49].index + "</span></td>"
-                        + "<td class='comment words50'><span data-len='50' data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[49].data.ru + "</span></td>"
+                        + "<td class='number dict50'><span data-len='50' data-number='" + s + "'>" + selection[0].index + "..." + selection[49].index + "</span></td>"
+                        + "<td class='comment dict50'><span data-len='50' data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[49].data.ru + "</span></td>"
                     + "</tr>";
                 });
                 content += "</table>";
                 break;
 
-            case "3":
+            case "dict100":
 
                 // Содержание для тестирования по 100 слов
 
@@ -339,8 +374,10 @@ var app = {
                 content += "<tr><th class='number'>№</th><th class='comment'>Выборка по 100</th></tr>";
                 self.buildDictionary(100);
                 self.dictionary.forEach(function(selection, s, selections){
-                    content += "<tr><td class='number'>" + selection[0].index + "..." + selection[99].index + "</td>"
-                        + "<td class='comment'>" + selection[0].data.ru + " ... " + selection[99].data.ru + "</td></tr>";
+                    content += "<tr>"
+                        + "<td class='number dict100'><span data-len='100' data-number='" + s + "'>" + selection[0].index + "..." + selection[99].index + "</span></td>"
+                        + "<td class='comment dict100'><span data-len='100' data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[99].data.ru + "</span></td>"
+                        + "</tr>";
                 });
                 content += "</table>";
                 break;
@@ -377,36 +414,17 @@ var app = {
         });
     },
 
-    mode: {
-
-        data: {
-            modes: [
-                {name: "view"},
-                {name: "test"},
-                {name: "test50"},
-                {name: "test100"}
-            ],
-            selected: 2
-        },
-
-        get: function() {
-            return this.data.modes[this.data.selected];
-        },
-
-        set: function(mode) {
-            this.data.selected = mode;
-        }
-
-    },
+    mode: "dict5",
 
     test: {
         sequence: [],
+        len : 0,
         index: 0,
         counter: 0,
         words: 0,
         fail: 0,
         good: 0,
-        result: 'process'
+        result: 'good'
     },
 
     dictionary: [
