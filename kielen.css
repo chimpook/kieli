@@ -91,7 +91,7 @@ th.result, td.result { width: 36px; background: none; }
     margin: 24px 4px 24px 4px;
     width: 650px;
     line-height: 32px;
-    font-size: 24px;
+    font-size: 24pt;
 }
     .dict-panel .question {
         margin-bottom: 12px;
@@ -123,6 +123,12 @@ th.result, td.result { width: 36px; background: none; }
         height: 128px;
         line-height: 128px;
         font-size: 126px;
+    }
+    .dict-progress .word20 {
+        width: 82px;
+        height: 82px;
+        line-height: 82px;
+        font-size: 80px;
     }
     .dict-progress .word50 {
         width: 64px;

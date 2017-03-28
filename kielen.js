@@ -40,7 +40,6 @@ var app = {
 
             if (value === answer) {
 
-                console.log("Good!");
                 tip.hide();
                 dict_word.html("<span class='glyphicon glyphicon-ok-sign'></span>");
 
@@ -64,13 +63,10 @@ var app = {
                             break;
                     }
                 } else {
-                    console.log(self.test.len + " : " + self.test.index);
                     self.test.index ++;
                 }
 
             } else {
-
-                console.log(self.test.counter);
 
                 switch (self.test.counter) {
                     case 0:
@@ -85,10 +81,9 @@ var app = {
                         self.test.counter++;
                         break;
                     case 3:
-                        console.log("Fail! " + answer + " : " + value);
                         tip.hide();
                         dict_word.html("<span class='glyphicon glyphicon-remove-sign'></span>");
-                        dict_word.removeClass("pending").addClass("fail");
+                        dict_word.removeClass("pending").removeClass("so-so").addClass("fail");
                         self.test.counter = 0;
                         self.test.result = "fail";
                         self.test.index ++;
@@ -253,6 +248,7 @@ var app = {
             .on("click", "td.words span", function() {self.processPart(this, "words");})
             .on("click", " td.tests span", function() {self.processPart(this, "tests");})
             .on("click", "td.dict5 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
+            .on("click", "td.dict20 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
             .on("click", "td.dict50 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
             .on("click", "td.dict100 span", function() {self.processDict(this); $(".dict-panel input").focus(); });
         $(".mode-selector").on("click", function() {self.selectMode(this, self);});
@@ -261,7 +257,6 @@ var app = {
     },
 
     switchRandom: function() {
-        console.log("change");
         var self = this;
         if (self.random) {
             self.random = 0;
@@ -368,6 +363,22 @@ var app = {
                 content += "</table>";
                 break;
 
+            case "dict20":
+
+                // Содержание для тестирования по 20 слов
+
+                content = "<table>";
+                content += "<tr><th class='number'>№</th><th class='comment'>Выборка по 20</th></tr>";
+                self.buildDictionary(20);
+                self.dictionary.forEach(function(selection, s, selections){
+                    content += "<tr>"
+                        + "<td class='number dict20'><span data-len='20' data-number='" + s + "'>" + selection[0].index + "..." + selection[19].index + "</span></td>"
+                        + "<td class='comment dict20'><span data-len='20' data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[19].data.ru + "</span></td>"
+                        + "</tr>";
+                });
+                content += "</table>";
+                break;
+
             case "dict50":
 
                 // Содержание для тестирования по 50 слов
@@ -468,9 +479,9 @@ var app = {
     },
 
 
-    mode: "dict5",
+    mode: "view",
 
-    random: 1,
+    random: 0,
 
     test: {
         sequence: [],
