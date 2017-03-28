@@ -171,9 +171,29 @@ var app = {
         var self = this;
         $(".index")
             .on("click", "td.words span", function() {self.processPart(this, "words");})
-            .on("click", " td.tests span", function() {self.processPart(this, "tests");});
+            .on("click", " td.tests span", function() {self.processPart(this, "tests");})
+            .on("click", "td.words50 span", function() {self.processWords(this)});
         $(".mode-selector").on("click", function() {self.selectMode(this, self);});
         $("button[name=debug]").on("click", function() {self.processDebug();});
+    },
+
+    processWords: function(object) {
+        var self = this;
+        var main = $(".main");
+        var number = $(object).attr('data-number');
+        var len = $(object).attr('data-len');
+        var words = self.dictionary[number];
+        var panel = "";
+        var progress = "";
+        var content = "";
+
+        panel = "<div class='words-panel'></div>";
+
+        words.forEach(function(word, i, words) {
+            content += word.data.fi + "<br/>";
+        });
+
+        main.html(content);
     },
 
     buildIndex: function() {
@@ -182,79 +202,90 @@ var app = {
         var index = $(".index");
         var main = $(".main");
         var mode = self.mode.data.selected.toString();
-        var index_content = "";
-        var collection = [];
+        var content = "";
 
         main.html("");
 
         switch(mode) {
             case "0":
-            case "1":
-                index_content = "<table>";
 
-                index_content += "<tr><th>№</th><th>Слова</th><th>Тесты</th><th>Тема</th></tr>";
+                // Содержание для просмотра разделов
+
+            case "1":
+
+                // Содержание для тестирования по разделам
+
+                content = "<table>";
+
+                content += "<tr><th>№</th><th>Слова</th><th>Тесты</th><th>Тема</th></tr>";
 
                 self.parts.forEach(function(part, i, parts) {
 
-                    index_content += "<tr class='parts'>";
+                    content += "<tr class='parts'>";
 
-                    index_content += "<td class='number'>" + (i + 1) + "</td>";
+                    content += "<td class='number'>" + (i + 1) + "</td>";
 
-                    index_content += "<td class='words'>";
+                    content += "<td class='words'>";
                     if (part.words.length > 0) {
-                        index_content += "<span data-number='" + part.number + "'>" + part.words.length + "</span>";
+                        content += "<span data-number='" + part.number + "'>" + part.words.length + "</span>";
                     }
-                    index_content += "</td>";
+                    content += "</td>";
 
-                    index_content += "<td class='tests'>";
+                    content += "<td class='tests'>";
                     if (part.tests.length > 0) {
-                        index_content += "<span data-number='" + part.number + "'>" + part.tests.length + "</span>";
+                        content += "<span data-number='" + part.number + "'>" + part.tests.length + "</span>";
                     }
-                    index_content += "</td>";
+                    content += "</td>";
 
-                    index_content += "<td class='comment'>" + part.comment.ru + "</td>";
+                    content += "<td class='comment'>" + part.comment.ru + "</td>";
 
-                    index_content += "</tr>";
+                    content += "</tr>";
                 });
-                index_content += "</table>";
+                content += "</table>";
                 break;
 
             case "2":
-                index_content = "<table>";
-                index_content += "<tr><th>№</th><th>Выборка по 50</th></tr>";
-                collection = self.collectWords(50);
-                collection.forEach(function(selection, s, selections){
-                    index_content += "<tr><td class='number'>" + selection[0].index + "..." + selection[49].index + "</td>"
-                        + "<td>" + selection[0].data.ru + "..." + selection[49].data.ru + "</td></tr>";
+
+                // Содержание для тестирования по 50 слов
+
+                content = "<table>";
+                content += "<tr><th class='number'>№</th><th class='comment'>Выборка по 50</th></tr>";
+                self.buildDictionary(50);
+                self.dictionary.forEach(function(selection, s, selections){
+                    content += "<tr>"
+                        + "<td class='number words50'><span data-len='50' data-number='" + s + "'>" + selection[0].index + "..." + selection[49].index + "</span></td>"
+                        + "<td class='comment words50'><span data-len='50' data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[49].data.ru + "</span></td>"
+                    + "</tr>";
                 });
-                index_content += "</table>";
-                console.log(collection);
+                content += "</table>";
                 break;
 
             case "3":
-                index_content = "<table>";
-                index_content += "<tr><th>№</th><th>Выборка по 100</th></tr>";
-                collection = self.collectWords(100);
-                collection.forEach(function(selection, s, selections){
-                    index_content += "<tr><td class='number'>" + selection[0].index + "..." + selection[99].index + "</td>"
-                        + "<td>" + selection[0].data.ru + "..." + selection[99].data.ru + "</td></tr>";
+
+                // Содержание для тестирования по 100 слов
+
+                content = "<table>";
+                content += "<tr><th class='number'>№</th><th class='comment'>Выборка по 100</th></tr>";
+                self.buildDictionary(100);
+                self.dictionary.forEach(function(selection, s, selections){
+                    content += "<tr><td class='number'>" + selection[0].index + "..." + selection[99].index + "</td>"
+                        + "<td class='comment'>" + selection[0].data.ru + " ... " + selection[99].data.ru + "</td></tr>";
                 });
-                index_content += "</table>";
-                console.log(collection);
+                content += "</table>";
                 break;
 
             default:
                 break;
         }
-        index.html(index_content);
+        index.html(content);
 
     },
 
-    collectWords: function(len) {
+    buildDictionary: function(len) {
         var self = this;
         var i = 0;
         var j = 0;
-        var collection = [];
+        self.dictionary = [];
         var selection = [];
 
         self.parts.forEach(function(part, p, parts) {
@@ -266,14 +297,13 @@ var app = {
                      data: word
                  };
                 if (++j >= len) {
-                    collection[i] = selection;
+                    self.dictionary[i] = selection;
                     selection = [];
                     j = 0;
                     i++;
                 }
             });
         });
-        return collection;
     },
 
     mode: {
@@ -285,7 +315,7 @@ var app = {
                 {name: "test50"},
                 {name: "test100"}
             ],
-            selected: 1
+            selected: 2
         },
 
         get: function() {
@@ -298,6 +328,9 @@ var app = {
 
     },
 
+    dictionary: [
+
+    ],
 
     parts: [
         {

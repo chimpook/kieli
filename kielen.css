@@ -44,10 +44,13 @@
     padding: 4px;
 }
 
+.index th.number {
+    text-align: center;
+}
 .index td.number {
     color: brown;
-    text-align: center;
     width: 24px;
+    text-align: center;
 }
 .index td.words {
     width: 60px;
@@ -60,9 +63,7 @@
 }
 
 .index td.comment {
-    width: 300px;
-    text-align: center;
-    background: orange;
+    width: 240px;
 }
 
 .index td span:hover {
