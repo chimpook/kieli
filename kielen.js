@@ -21,7 +21,66 @@ var app = {
         self.displayMode();
         self.initInputsWords();
         self.initInputsTests();
+        self.initInputsDict();
 
+    },
+
+    initInputsDict: function() {
+        var self = this;
+        $(".main").on("change", ".dict-panel input", function() {
+
+            var question = self.test.sequence[self.test.index].data.ru;
+            var answer = self.test.sequence[self.test.index].data.fi;
+            var value = $(this).val();
+            var tip = $(".main .dict-panel .tip");
+            var dict_word = $("#dict-word-" + self.test.index);
+
+            tip.text(self.test.sequence[self.test.index].data.fi);
+
+            if (value === answer) {
+
+                console.log("Good!");
+                tip.hide();
+                dict_word.html("<span class='glyphicon glyphicon-ok-sign'></span>");
+
+                if (self.test.counter < 3) {
+                    dict_word.removeClass("pending").addClass("good");
+                }
+
+                self.test.counter = 0;
+                self.test.index ++;
+
+            } else {
+
+                console.log(self.test.counter);
+
+                switch (self.test.counter) {
+                    case 0:
+                    case 1:
+                        self.test.counter++;
+                        break;
+                    case 2:
+                        tip.show();
+                        dict_word.html("<span class='glyphicon glyphicon-exclamation-sign'></span>");
+                        dict_word.removeClass("pending").addClass("so-so");
+                        self.test.result = 'so-so';
+                        self.test.counter++;
+                        break;
+                    case 3:
+                        console.log("Fail! " + answer + " : " + value);
+                        tip.hide();
+                        dict_word.html("<span class='glyphicon glyphicon-remove-sign'></span>");
+                        dict_word.removeClass("pending").addClass("fail");
+                        self.test.counter = 0;
+                        self.test.index ++;
+                        break;
+                }
+
+            }
+
+            $(".main .dict-panel .question").text(self.test.sequence[self.test.index].data.ru);
+            $(".main .dict-panel input[name=answer]").val('');
+        });
     },
 
     initInputsWords: function() {
@@ -172,28 +231,40 @@ var app = {
         $(".index")
             .on("click", "td.words span", function() {self.processPart(this, "words");})
             .on("click", " td.tests span", function() {self.processPart(this, "tests");})
-            .on("click", "td.words50 span", function() {self.processWords(this)});
+            .on("click", "td.words50 span", function() {self.processDict(this); $(".dict-panel input").focus(); });
         $(".mode-selector").on("click", function() {self.selectMode(this, self);});
         $("button[name=debug]").on("click", function() {self.processDebug();});
     },
 
-    processWords: function(object) {
+    processDict: function(object) {
         var self = this;
         var main = $(".main");
         var number = $(object).attr('data-number');
         var len = $(object).attr('data-len');
-        var words = self.dictionary[number];
-        var panel = "";
-        var progress = "";
-        var content = "";
 
-        panel = "<div class='words-panel'></div>";
+        self.test.sequence = self.dictionary[number];
+        self.test.index = 0;
+        self.test.counter = 0;
+        self.test.fail = 0;
+        self.test.good = 0;
+        self.test.result = 'process';
 
-        words.forEach(function(word, i, words) {
-            content += word.data.fi + "<br/>";
+        var panel = "<div class='dict-panel'>"
+            + "<span class='question label label-info'>" + self.test.sequence[self.test.index].data.ru + "</span>"
+            + "<span class='tip label label-warning' style='display: none'>" + self.test.sequence[self.test.index].data.fi + "</span>"
+            + "<input name='answer' type='text' />"
+            + "</div>";
+        var progress = "<div class='dict-progress'>";
+
+
+        self.test.sequence.forEach(function(word, i, words) {
+            progress += "<div id='dict-word-" + i + "' data-i='" + i + "' data-fi='" + word.data.fi + "' data-ru='" + word.data.ru + "' class='word word" + len + " pending'>"
+            + "<span class='glyphicon glyphicon-question-sign'></span>"
+            + "</div>";
         });
+        progress += "</div>";
 
-        main.html(content);
+        main.html(panel + progress);
     },
 
     buildIndex: function() {
@@ -326,6 +397,16 @@ var app = {
             this.data.selected = mode;
         }
 
+    },
+
+    test: {
+        sequence: [],
+        index: 0,
+        counter: 0,
+        words: 0,
+        fail: 0,
+        good: 0,
+        result: 'process'
     },
 
     dictionary: [
