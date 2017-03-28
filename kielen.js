@@ -178,6 +178,11 @@ var app = {
         var self = this;
         $("button.mode-selector").css("border", "none");
         $("button[name=" + self.mode + "_mode]").css("border", "2px solid darkgreen");
+        if (self.random) {
+            $("button[name=random]").css("border", "2px solid darkgreen");
+        } else {
+            $("button[name=random]").css("border", "none");
+        }
     },
 
     processPart: function(object, entity) {
@@ -251,7 +256,20 @@ var app = {
             .on("click", "td.dict50 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
             .on("click", "td.dict100 span", function() {self.processDict(this); $(".dict-panel input").focus(); });
         $(".mode-selector").on("click", function() {self.selectMode(this, self);});
+        $(".random").on("click", function() {self.switchRandom();});
         $("button[name=debug]").on("click", function() {self.processDebug();});
+    },
+
+    switchRandom: function() {
+        console.log("change");
+        var self = this;
+        if (self.random) {
+            self.random = 0;
+        } else {
+            self.random = 1;
+        }
+        self.displayMode();
+        self.buildIndex();
     },
 
     processDict: function(object) {
@@ -395,26 +413,64 @@ var app = {
         var j = 0;
         self.dictionary = [];
         var selection = [];
+        var list = [];
 
         self.parts.forEach(function(part, p, parts) {
             part.words.forEach(function(word, w, words){
-                 selection[j] = {
-                     part: p,
-                     word: w,
-                     index: (i * len + j + 1),
-                     data: word
-                 };
-                if (++j >= len) {
-                    self.dictionary[i] = selection;
-                    selection = [];
-                    j = 0;
-                    i++;
-                }
+                list[i++] = {
+                    part: p,
+                    word: w,
+                    data: word
+                };
             });
         });
+
+        i = 0;
+
+        if (self.random) {
+            list = self.shuffle(list);
+        }
+
+        list.forEach(function(el, e, list){
+             selection[j] = {
+                 part: el.part,
+                 word: el.word,
+                 data: el.data,
+                 index: (i * len + j + 1)
+             };
+            if (++j >= len) {
+                self.dictionary[i] = selection;
+                selection = [];
+                j = 0;
+                i++;
+            }
+        });
+
     },
 
+    shuffle: function(arr) {
+
+        var currentIndex = arr.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = arr[currentIndex];
+            arr[currentIndex] = arr[randomIndex];
+            arr[randomIndex] = temporaryValue;
+        }
+        return arr;
+    },
+
+
     mode: "dict5",
+
+    random: 1,
 
     test: {
         sequence: [],
@@ -427,9 +483,7 @@ var app = {
         result: 'good'
     },
 
-    dictionary: [
-
-    ],
+    dictionary: [],
 
     parts: [
         {
@@ -977,7 +1031,7 @@ var app = {
                 {ru: "иметь, бегать - слабая te",            fi: "olette, juoksette"},
                 {ru: "иметь, бегать - сильная he",           fi: "ovat, juoksevat"},
             ]
-        },
+        }
     ]
 
 
