@@ -40,6 +40,8 @@ var app = {
 
             if (value === answer) {
 
+                /* Правильный ответ */
+
                 tip.hide();
                 dict_word.html("<span class='glyphicon glyphicon-ok-sign'></span>");
 
@@ -55,7 +57,12 @@ var app = {
                             dict_panel.html("<span class='result label label-danger'>Тест не пройден</span>");
                             break;
                         case "so-so":
-                            dict_panel.html("<span class='result label label-warning'>Тест частично пройден</span>");
+                            var learner_button = "";
+                            if (self.learn.data.length) {
+                                learner_button = "<button name='learner' class='btn btn-default'>Повторить слова</button>";
+                            }
+                            dict_panel.html("<span class='result label label-warning'>Тест частично пройден</span>"
+                                + learner_button);
                             break;
                         case "good":
                         default:
@@ -68,12 +75,17 @@ var app = {
 
             } else {
 
+                /* Неправильный ответ */
+
                 switch (self.test.counter) {
                     case 0:
                     case 1:
+                        // Две первые попытки - без последствий
                         self.test.counter++;
                         break;
                     case 2:
+                        // Третья попытка - вывод подсказки и фиксация слова для повторения
+                        self.learn.data.push(self.test.index);
                         tip.show();
                         dict_word.html("<span class='glyphicon glyphicon-exclamation-sign'></span>");
                         dict_word.removeClass("pending").addClass("so-so");
@@ -81,6 +93,7 @@ var app = {
                         self.test.counter++;
                         break;
                     case 3:
+                        // Четвертая ошибка - тест провален (хотя для чего этот статус? возможно, потом уберу его)
                         tip.hide();
                         dict_word.html("<span class='glyphicon glyphicon-remove-sign'></span>");
                         dict_word.removeClass("pending").removeClass("so-so").addClass("fail");
@@ -95,6 +108,31 @@ var app = {
             $(".main .dict-panel .question").text(self.test.sequence[self.test.index].data.ru);
             $(".main .dict-panel input[name=answer]").val('');
         });
+    },
+
+    processLearner: function() {
+        var self = this;
+        var content = "";
+        var word = {};
+        var main = $(".main");
+        self.learn.counter = 5;
+
+        content = "<table class='learner-list'><tr><th class='i'>N</th><th class='src'>ru</th><th class='dst'>fi</th><th class='result'></th></tr>";
+
+        self.learn.data.forEach(function(index, i, data){
+
+            word = self.test.sequence[index].data;
+
+            content += "<tr class='i_" + i + "'>"
+                        + "<td><span class='label label-success'>" + (i + 1) + "</span></td>"
+                        + "<td class='question'>" + word.ru + "</td>"
+                        + "<td class='answer'><input class='learner' type='text' data-answer='" + word.fi + "'/></td>"
+                        + "<td class='result'></td>"
+                    + "</tr>";
+        });
+        content += "</table>";
+        main.html(content);
+        $(".learner-list tr.i_0 input").focus();
     },
 
     initInputsWords: function() {
@@ -254,6 +292,7 @@ var app = {
         $(".mode-selector").on("click", function() {self.selectMode(this, self);});
         $(".random").on("click", function() {self.switchRandom();});
         $("button[name=debug]").on("click", function() {self.processDebug();});
+        $(".main").on("click", "button[name=learner]", function() {self.processLearner();});
     },
 
     switchRandom: function() {
@@ -478,6 +517,10 @@ var app = {
         return arr;
     },
 
+    learn: {
+        data: [],
+        counter: 5
+    },
 
     mode: "view",
 
