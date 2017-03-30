@@ -238,25 +238,46 @@ var app = {
 
         switch(self.mode) {
 
-            case "view":
-                content = "<table class='view-list'><tr><th class='i'>N</th><th class='src'>ru</th><th class='dst'>fi</th></tr>";
+            case "view-table":
+                content = "<table class='view-list'>";
+                //+ "<tr><th class='i'>N</th><th class='src'>ru</th><th class='dst'>fi</th></tr>";
                 data.forEach(function(el, i, data){
-                    content += "<tr class='i_" + i + "'><td class='i'><span class='label label-success'>" + (i + 1) + "</span></td><td class='src'>" + el.ru + "</td><td class='dst'>" + el.fi + "</td></tr>";
+                    content += "<tr class='i_" + i + "'><td class='i'>" + (i + 1) + "</td><td class='src'>" + el.ru + "</td><td class='dst'>" + el.fi + "</td></tr>";
                 });
                 content += "</table>";
                 main.html(content);
                 break;
 
-            case "test":
+            case "test-table":
                 content = "<table class='test-list'><tr><th class='i'>N</th><th class='src'>ru</th><th class='dst'>fi</th><th class='result'></th></tr>";
                 data.forEach(function(el, i, data){
                     content += "<tr class='i_" + i + "'><td class='i'><span class='label label-success'>" + (i + 1) + "</span></td><td class='src'>" + el.ru
                         + "</td><td class='dst'><input class='" + entity + "' type='text' data-number='" + number + "' data-i='" + i + "'/></td>"
-                    + "<td class='result'></td></tr>";
+                        + "<td class='result'></td></tr>";
                 });
                 content += "</table>";
                 main.html(content);
                 $(".test-list tr.i_0 input").focus();
+                break;
+
+            case "view":
+                data.forEach(function(el, i, data){
+                    content += "<div class='terms view'>";
+                    content += "<div class='number'>" + (i + 1) + "</div><div class='question'>" + el.ru + "</div>"
+                    + "<div class='answer'><input name='answer' placeholder='" + el.fi + "' /></div>";
+                    content += "</div>";
+                });
+                main.html(content);
+                break;
+
+            case "test":
+                data.forEach(function(el, i, data){
+                    content += "<div class='terms test'>";
+                    content += "<div class='number'>" + (i + 1) + "</div><div class='question'>" + el.ru + "</div><div class='answer'>" + el.fi + "</div>";
+                    content += "</div>";
+                });
+                main.html(content);
+                //$(".terms.test input").focus();
                 break;
 
             default:
@@ -293,12 +314,12 @@ var app = {
     initButtons: function() {
         var self = this;
         $(".index")
-            .on("click", "td.words span", function() {self.processPart(this, "words");})
-            .on("click", " td.tests span", function() {self.processPart(this, "tests");})
-            .on("click", "td.dict5 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
-            .on("click", "td.dict20 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
-            .on("click", "td.dict50 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
-            .on("click", "td.dict100 span", function() {self.processDict(this); $(".dict-panel input").focus(); });
+            .on("click", ".words span", function() {self.processPart(this, "words");})
+            .on("click", ".tests span", function() {self.processPart(this, "tests");})
+            .on("click", ".dict5 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
+            .on("click", ".dict20 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
+            .on("click", ".dict50 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
+            .on("click", ".dict100 span", function() {self.processDict(this); $(".dict-panel input").focus(); });
         $(".mode-selector").on("click", function() {self.selectMode(this, self);});
         $(".random").on("click", function() {self.switchRandom();});
         $("button[name=debug]").on("click", function() {self.processDebug();});
@@ -359,11 +380,7 @@ var app = {
 
         switch(self.mode) {
 
-            case "view":
-
-                // Содержание для просмотра разделов
-
-            case "test":
+            case "test.table":
 
                 // Содержание для тестирования по разделам
 
@@ -394,6 +411,39 @@ var app = {
                     content += "</tr>";
                 });
                 content += "</table>";
+                break;
+
+            case "view":
+
+                // Содержание для просмотра разделов
+
+            case "test":
+
+                // Содержание для тестирования по разделам
+
+                self.parts.forEach(function(part, i, parts) {
+
+                    content += "<div class='parts'>";
+
+                    content += "<div class='number'>" + (i + 1) + "</div>";
+
+                    content += "<div class='comment'>" + part.comment.ru + "</div>";
+
+                    content += "<div class='words'>";
+                    if (part.words.length > 0) {
+                        content += "<span data-number='" + part.number + "'>" + part.words.length + "</span>";
+                    }
+                    content += "</div>";
+
+                    content += "<div class='tests'>";
+                    if (part.tests.length > 0) {
+                        content += "<span data-number='" + part.number + "'>" + part.tests.length + "</span>";
+                    }
+                    content += "</div>";
+
+                    content += "</div>";
+                });
+                //content += "</table>";
                 break;
 
             case "dict5":
@@ -686,7 +736,7 @@ var app = {
         },
         {
             number: 5,
-            comment: {ru: "Первые глаголы. Вопросы Kuka? Mikä?"},
+            comment: {ru: "Первые глаголы. Kuka? Mikä?"},
             words: [
                 {ru: "жить",                    fi: "asua"},
                 {ru: "сидеть",                  fi: "istua"},
@@ -901,7 +951,7 @@ var app = {
         },
         {
             number: 8,
-            comment: {ru: "Чередование ступеней согласных (сильная и слабая ступень).", fi: "Konsonanttien astevaihtelu (vahva aste ja heikko aste)."},
+            comment: {ru: "Чередование ступеней согласных.", fi: "Konsonanttien astevaihtelu."},
             words: [
                 {ru: "спать",                   fi: "nukkua"},
                 {ru: "выучить, учить",          fi: "oppia"},
