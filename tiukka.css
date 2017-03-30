@@ -1,0 +1,152 @@
+body {
+    background: palegoldenrod;
+}
+
+.top {
+    width: 100%;
+    height: 42px;
+    background: darkseagreen;
+    vertical-align: middle;
+    line-height: 42px;
+    margin-bottom: 12px;
+}
+    .top .title {
+        margin-left: 24px;
+        margin-right: 24px;
+        font-weight: bold;
+    }
+    .top button {
+        margin-bottom: 2px;
+    }
+    .top button[name=debug] {
+        float: right;
+        margin-right: 24px;
+        margin-top: 4px;
+    }
+
+.index {
+    width: calc(40% - 16px);
+    float: left;
+    margin-left: 16px;
+}
+    .index th,
+    .index td { padding: 4px; }
+    .index th.number { text-align: center; }
+    .index td.number {
+        color: brown;
+        width: 24px;
+        text-align: center;
+    }
+    .index td.words { width: 60px; text-align: center; }
+    .index td.tests { width: 60px; text-align: center; }
+    .index td.comment { width: 240px; }
+    .index td span:hover { color: #0ca2ff; font-weight: bolder; }
+    .index td span { cursor: pointer; }
+
+.main { width: 60%; float: left; }
+
+.parts:hover { color: #1b6d85; }
+
+table.view-list,
+table.test-list { width: 600px; }
+
+.view-list th,
+.test-list th {
+    background: darkseagreen;
+    padding: 8px;
+    font-weight: bold;
+    color: white;
+}
+.view-list td,
+.test-list td { padding: 4px; }
+
+th.i { border-radius: 8px 0 0 0; }
+
+th.dst { border-radius: 0 8px 0 0; }
+
+td.i {
+    width: 36px;
+    font-weight: bolder;
+    color: #5e5e5e;
+    text-align: center;
+}
+
+td.src, td.dst { width: 264px; }
+
+th.result, td.result { width: 36px; background: none; }
+
+.main tr:nth-child(even) td.i,
+.main tr:nth-child(even) td.src,
+.main tr:nth-child(even) td.dst { background: rgba(0, 255, 0, 0.1); }
+
+.main tr:hover td.i span{ background: orangered; }
+
+.test-list input { width: 100%; }
+
+.result-ok { color: forestgreen; }
+
+.result-fail { color: firebrick; }
+
+
+/* Панель тестирования по словарю */
+
+.dict-panel {
+    text-align: center;
+    margin: 24px 4px 24px 4px;
+    width: 650px;
+    line-height: 32px;
+    font-size: 24pt;
+}
+    .dict-panel .question {
+        margin-bottom: 12px;
+        width: 650px;
+        float: left;
+    }
+    .dict-panel .tip {
+        margin-bottom: 12px;
+        width: 650px;
+        float: left;
+    }
+    .dict-panel .result {
+        margin-bottom: 12px;
+        width: 650px;
+        float: left;
+    }
+
+/* Прогресс тестирования по словарю */
+.dict-progress { width: 650px; background: aliceblue; }
+    .dict-progress .word {
+        float: left;
+        background: whitesmoke;
+        text-align: center;
+        vertical-align: middle;
+        margin: 4px 0 0 4px;
+    }
+    .dict-progress .word5 {
+        width: 128px;
+        height: 128px;
+        line-height: 128px;
+        font-size: 126px;
+    }
+    .dict-progress .word20 {
+        width: 82px;
+        height: 82px;
+        line-height: 82px;
+        font-size: 80px;
+    }
+    .dict-progress .word50 {
+        width: 64px;
+        height: 64px;
+        line-height: 64px;
+        font-size: 62px;
+    }
+    .dict-progress .word100 {
+        width: 48px;
+        height: 48px;
+        line-height: 48px;
+        font-size: 46px;
+    }
+    .dict-progress .pending { color: lightgray; }
+    .dict-progress .good {color: forestgreen; }
+    .dict-progress .fail {color: darkred; }
+    .dict-progress .so-so {color: darkgoldenrod;}

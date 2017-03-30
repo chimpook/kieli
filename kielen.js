@@ -9,7 +9,7 @@ $(document).ready(function () {
 var app = {
 
     settings: {
-        
+        theme: "tiukka"
     },
 
     init: function() {
@@ -22,7 +22,17 @@ var app = {
         self.initInputsWords();
         self.initInputsTests();
         self.initInputsDict();
+        self.activateTheme();
 
+    },
+    
+    activateTheme: function() {
+        var self = this;
+        $("<link/>", {
+            rel: "stylesheet",
+            type: "text/css",
+            href: self.settings.theme + ".css"
+        }).appendTo("head");
     },
 
     initInputsDict: function() {
