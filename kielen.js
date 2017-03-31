@@ -9,12 +9,17 @@ $(document).ready(function () {
 var app = {
 
     settings: {
-        theme: "tiukka"
+        theme: "tiukka",
+        mode: "dict",
+        size: 20
     },
 
     init: function() {
 
         var self = this;
+
+        self.mode = self.settings.mode;
+        self.size = self.settings.size;
 
         self.buildIndex();
         self.initButtons();
@@ -219,10 +224,13 @@ var app = {
 
     displayMode: function() {
         var self = this;
+        var button_mode = self.mode === "dict" ? self.mode + self.size : self.mode;
         $("button.mode-selector").css("border", "none");
-        $("button[name=" + self.mode + "_mode]").css("border", "2px solid darkgreen");
+
+        $("button[name=" + button_mode + "_mode]").css("border", "2px solid black");
+
         if (self.random) {
-            $("button[name=random]").css("border", "2px solid darkgreen");
+            $("button[name=random]").css("border", "2px solid black");
         } else {
             $("button[name=random]").css("border", "none");
         }
@@ -420,16 +428,20 @@ var app = {
 
             case "dict":
 
-                content = "<table>";
-                content += "<tr><th class='number'>№</th><th class='comment'>Выборка по " + self.size + "</th></tr>";
+                // Содержание для тестирования по словарю
+
                 self.buildDictionary();
+
                 self.dictionary.forEach(function(selection, s, selections){
-                    content += "<tr>"
-                        + "<td class='number dicts'><span data-number='" + s + "'>" + selection[0].index + "..." + selection[self.size - 1].index + "</span></td>"
-                        + "<td class='comment dicts'><span data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[self.size - 1].data.ru + "</span></td>"
-                        + "</tr>";
+
+                    content += "<div class='dicts'>";
+
+                    content += "<div class='number'><span data-number='" + s + "'>" + selection[0].index + "..." + selection[self.size - 1].index + "</span></div>";
+
+                    content += "<div class='comment'><span data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[self.size - 1].data.ru + "</span></div>";
+
+                    content += "</div>";
                 });
-                content += "</table>";
                 break;
 
             default:

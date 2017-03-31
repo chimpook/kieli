@@ -67,37 +67,69 @@ body {
     background: rgba(246, 246, 246, 0.8);
 }
 
-.index .number {
+.index .parts .number {
     width: 32px;
     text-align: center;
 }
 
-.index .words {
+.index .parts .words {
     width: 46px;
     text-align: center;
     margin-left: 2px;
 }
 
-.index .words span:hover {
+.index .parts .words span:hover {
     cursor: pointer;
 }
 
-.index .tests {
+.index .parts .tests {
     width: 46px;
     text-align: center;
     margin-left: 2px;
 }
 
-.index .tests span:hover {
+.index .parts .tests span:hover {
     cursor: pointer;
 }
 
-.index .comment {
+.index .parts .comment {
     width: calc(100% - 48px - 48px - 32px - 2px);
     padding-left: 12px;
     margin-left: 2px;
 }
 
+.index .dicts {
+    width: 100%;
+    height: 32px;
+    margin-bottom: 4px;
+    background: rgba(242, 242, 242, 0.2);
+}
+
+.index .dicts div {
+    height: 32px;
+    line-height: 32px;
+    vertical-align: middle;
+    background: rgba(242, 242, 242, 0.8);
+}
+
+.index .dicts:hover div {
+    background: rgba(246, 246, 246, 0.8);
+}
+
+.index .dicts .number {
+    width: 84px;
+    text-align: center;
+}
+
+.index .dicts .comment {
+    margin-left: 2px;
+    width: calc(100% - 88px);
+    padding-left: 8px;
+}
+
+.index .dicts span {
+    cursor: pointer;
+}
 /*------------------------------------------------ главная панель ----------------------------------------------------*/
 .main {
     position: absolute;
