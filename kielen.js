@@ -350,7 +350,7 @@ var app = {
         self.buildIndex();
     },
 
-    processDict: function(object) {
+    processDict_bak: function(object) {
         var self = this;
         var main = $(".main");
         var number = $(object).attr('data-number');
@@ -380,6 +380,33 @@ var app = {
         progress += "</div>";
 
         main.html(panel + progress);
+    },
+
+    processDict: function(object) {
+        var self = this;
+        var main = $(".main");
+        var number = $(object).attr("data-number");
+        var len = $(object).attr('data-len');
+
+        self.test.sequence = self.dictionary[number];
+        self.test.len = len;
+        self.test.index = 0;
+        self.test.counter = 0;
+        self.test.fail = 0;
+        self.test.good = 0;
+        self.test.result = 'process';
+
+        var content = "";
+        var first_answer = "input[name=answer_0]";
+
+        self.test.sequence.forEach(function(el, i, data){
+            content += "<div class='terms dict'>";
+            content += "<div class='number'>" + (i + 1) + "</div><div id='question_" + i + "' class='question'>" + el.data.ru + "</div>"
+                + "<div class='answer'><input name='answer_" + i + "' data-tip='" + el.data.fi + "' data-i='" + i + "' placeholder='" + el.data.fi + "' /></div>";
+            content += "</div>";
+        });
+        main.html(content);
+        $(first_answer).focus();
     },
 
     buildIndex: function() {
