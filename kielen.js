@@ -288,6 +288,7 @@ var app = {
 
     selectMode: function(object, self) {
         self.mode = $(object).attr("data-mode");
+        self.size = $(object).attr("data-size");
         self.buildIndex();
         self.displayMode();
     },
@@ -297,10 +298,7 @@ var app = {
         $(".index")
             .on("click", ".words span", function() {self.processPart(this, "words");})
             .on("click", ".tests span", function() {self.processPart(this, "tests");})
-            .on("click", ".dict5 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
-            .on("click", ".dict20 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
-            .on("click", ".dict50 span", function() {self.processDict(this); $(".dict-panel input").focus(); })
-            .on("click", ".dict100 span", function() {self.processDict(this); $(".dict-panel input").focus(); });
+            .on("click", ".dicts span", function() {self.processDict(this); $(".dict-panel input").focus(); });
         $(".mode-selector").on("click", function() {self.selectMode(this, self);});
         $(".random").on("click", function() {self.switchRandom();});
         $("button[name=debug]").on("click", function() {self.processDebug();});
@@ -387,39 +385,6 @@ var app = {
 
         switch(self.mode) {
 
-            case "test.table":
-
-                // Содержание для тестирования по разделам
-
-                content = "<table>";
-
-                content += "<tr><th>№</th><th>Слова</th><th>Тесты</th><th>Тема</th></tr>";
-
-                self.parts.forEach(function(part, i, parts) {
-
-                    content += "<tr class='parts'>";
-
-                    content += "<td class='number'>" + (i + 1) + "</td>";
-
-                    content += "<td class='words'>";
-                    if (part.words.length > 0) {
-                        content += "<span data-number='" + part.number + "'>" + part.words.length + "</span>";
-                    }
-                    content += "</td>";
-
-                    content += "<td class='tests'>";
-                    if (part.tests.length > 0) {
-                        content += "<span data-number='" + part.number + "'>" + part.tests.length + "</span>";
-                    }
-                    content += "</td>";
-
-                    content += "<td class='comment'>" + part.comment.ru + "</td>";
-
-                    content += "</tr>";
-                });
-                content += "</table>";
-                break;
-
             case "view":
 
                 // Содержание для просмотра разделов
@@ -453,65 +418,15 @@ var app = {
                 //content += "</table>";
                 break;
 
-            case "dict5":
-
-                // Содержание для тестирования по 5 слов
-                
-                content = "<table>";
-                content += "<tr><th class='number'>№</th><th class='comment'>Выборка по 5</th></tr>";
-                self.buildDictionary(5);
-                self.dictionary.forEach(function(selection, s, selections){
-                    content += "<tr>"
-                        + "<td class='number dict5'><span data-len='5' data-number='" + s + "'>" + selection[0].index + "..." + selection[4].index + "</span></td>"
-                        + "<td class='comment dict5'><span data-len='5' data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[4].data.ru + "</span></td>"
-                        + "</tr>";
-                });
-                content += "</table>";
-                break;
-
-            case "dict20":
-
-                // Содержание для тестирования по 20 слов
+            case "dict":
 
                 content = "<table>";
-                content += "<tr><th class='number'>№</th><th class='comment'>Выборка по 20</th></tr>";
-                self.buildDictionary(20);
+                content += "<tr><th class='number'>№</th><th class='comment'>Выборка по " + self.size + "</th></tr>";
+                self.buildDictionary();
                 self.dictionary.forEach(function(selection, s, selections){
                     content += "<tr>"
-                        + "<td class='number dict20'><span data-len='20' data-number='" + s + "'>" + selection[0].index + "..." + selection[19].index + "</span></td>"
-                        + "<td class='comment dict20'><span data-len='20' data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[19].data.ru + "</span></td>"
-                        + "</tr>";
-                });
-                content += "</table>";
-                break;
-
-            case "dict50":
-
-                // Содержание для тестирования по 50 слов
-
-                content = "<table>";
-                content += "<tr><th class='number'>№</th><th class='comment'>Выборка по 50</th></tr>";
-                self.buildDictionary(50);
-                self.dictionary.forEach(function(selection, s, selections){
-                    content += "<tr>"
-                        + "<td class='number dict50'><span data-len='50' data-number='" + s + "'>" + selection[0].index + "..." + selection[49].index + "</span></td>"
-                        + "<td class='comment dict50'><span data-len='50' data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[49].data.ru + "</span></td>"
-                    + "</tr>";
-                });
-                content += "</table>";
-                break;
-
-            case "dict100":
-
-                // Содержание для тестирования по 100 слов
-
-                content = "<table>";
-                content += "<tr><th class='number'>№</th><th class='comment'>Выборка по 100</th></tr>";
-                self.buildDictionary(100);
-                self.dictionary.forEach(function(selection, s, selections){
-                    content += "<tr>"
-                        + "<td class='number dict100'><span data-len='100' data-number='" + s + "'>" + selection[0].index + "..." + selection[99].index + "</span></td>"
-                        + "<td class='comment dict100'><span data-len='100' data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[99].data.ru + "</span></td>"
+                        + "<td class='number dicts'><span data-number='" + s + "'>" + selection[0].index + "..." + selection[self.size - 1].index + "</span></td>"
+                        + "<td class='comment dicts'><span data-number='" + s + "'>" + selection[0].data.ru + " ... " + selection[self.size - 1].data.ru + "</span></td>"
                         + "</tr>";
                 });
                 content += "</table>";
@@ -524,7 +439,7 @@ var app = {
 
     },
 
-    buildDictionary: function(len) {
+    buildDictionary: function() {
         var self = this;
         var i = 0;
         var j = 0;
@@ -553,9 +468,9 @@ var app = {
                  part: el.part,
                  word: el.word,
                  data: el.data,
-                 index: (i * len + j + 1)
+                 index: (i * self.size + j + 1)
              };
-            if (++j >= len) {
+            if (++j >= self.size) {
                 self.dictionary[i] = selection;
                 selection = [];
                 j = 0;
@@ -590,6 +505,8 @@ var app = {
     },
 
     mode: "view",
+
+    size: 20,
 
     random: 0,
 
