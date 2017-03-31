@@ -235,49 +235,30 @@ var app = {
         var data = self.parts[number][entity];
         var content = "";
         var main = $(".main");
+        var first_answer = "input[name=answer_0]";
 
         switch(self.mode) {
-
-            case "view-table":
-                content = "<table class='view-list'>";
-                //+ "<tr><th class='i'>N</th><th class='src'>ru</th><th class='dst'>fi</th></tr>";
-                data.forEach(function(el, i, data){
-                    content += "<tr class='i_" + i + "'><td class='i'>" + (i + 1) + "</td><td class='src'>" + el.ru + "</td><td class='dst'>" + el.fi + "</td></tr>";
-                });
-                content += "</table>";
-                main.html(content);
-                break;
-
-            case "test-table":
-                content = "<table class='test-list'><tr><th class='i'>N</th><th class='src'>ru</th><th class='dst'>fi</th><th class='result'></th></tr>";
-                data.forEach(function(el, i, data){
-                    content += "<tr class='i_" + i + "'><td class='i'><span class='label label-success'>" + (i + 1) + "</span></td><td class='src'>" + el.ru
-                        + "</td><td class='dst'><input class='" + entity + "' type='text' data-number='" + number + "' data-i='" + i + "'/></td>"
-                        + "<td class='result'></td></tr>";
-                });
-                content += "</table>";
-                main.html(content);
-                $(".test-list tr.i_0 input").focus();
-                break;
 
             case "view":
                 data.forEach(function(el, i, data){
                     content += "<div class='terms view'>";
-                    content += "<div class='number'>" + (i + 1) + "</div><div class='question'>" + el.ru + "</div>"
-                    + "<div class='answer'><input name='answer' placeholder='" + el.fi + "' /></div>";
+                    content += "<div class='number'>" + (i + 1) + "</div><div id='question_" + i + "' class='question'>" + el.ru + "</div>"
+                    + "<div class='answer'><input name='answer_" + i + "' data-tip='" + el.fi + "' data-i='" + i + "' placeholder='" + el.fi + "' /></div>";
                     content += "</div>";
                 });
                 main.html(content);
+                $(first_answer).focus();
                 break;
 
             case "test":
                 data.forEach(function(el, i, data){
-                    content += "<div class='terms test'>";
-                    content += "<div class='number'>" + (i + 1) + "</div><div class='question'>" + el.ru + "</div><div class='answer'>" + el.fi + "</div>";
+                    content += "<div class='terms view'>";
+                    content += "<div class='number'>" + (i + 1) + "</div><div id='question_" + i + "' class='question'>" + el.ru + "</div>"
+                        + "<div class='answer'><input name='answer_" + i + "' data-tip='" + el.fi + "' data-i='" + i + "' /></div>";
                     content += "</div>";
                 });
                 main.html(content);
-                //$(".terms.test input").focus();
+                $(first_answer).focus();
                 break;
 
             default:
@@ -323,7 +304,33 @@ var app = {
         $(".mode-selector").on("click", function() {self.selectMode(this, self);});
         $(".random").on("click", function() {self.switchRandom();});
         $("button[name=debug]").on("click", function() {self.processDebug();});
-        $(".main").on("click", "button[name=learner]", function() {self.processLearner();});
+        $(".main").on("click", "button[name=learner]", function() {self.processLearner();})
+            .on("change", ".answer input", function() {self.processRetype(this);});
+    },
+
+    processRetype: function(object) {
+        var self = this;
+        var i = $(object).attr('data-i');
+        var question = $("#question_" + i).text();
+        var answer = $(object).val();
+        var tip = $(object).attr("data-tip");
+
+        if (answer == tip) {
+            i++;
+            console.log("YES");
+            $(object).removeClass("incorrect").addClass("correct");
+            var next = $("input[name=answer_" + i + "]");
+
+            if (next.length) {
+                next.focus();
+            } else {
+                $(".answer input").val("").removeClass("correct").removeClass("incorrect");
+                $("input[name=answer_0]").focus();
+            }
+        } else {
+            $(object).removeClass("correct").addClass("incorrect");
+        }
+
     },
 
     switchRandom: function() {

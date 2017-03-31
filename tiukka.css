@@ -148,3 +148,11 @@ body {
     border: none;
     padding-left: 8px;
 }
+
+.main .terms .answer input.correct {
+    background: rgba(60, 179, 113, 0.2);
+}
+
+.main .terms .answer input.incorrect {
+    background: rgba(205, 92, 92, 0.2);
+}
