@@ -19,7 +19,7 @@ var app = {
         var self = this;
 
         // Подключаем блок данных
-        self.parts = data.fi;
+        self.course = data.fi;
 
         self.mode = self.settings.mode;
         self.size = self.settings.size;
@@ -168,7 +168,7 @@ var app = {
 
             } else {
                 td_result.html("<span class='result-fail glyphicon glyphicon-remove-sign' title='"
-                    + self.parts[number].words[i].fi + "'></span>");
+                    + self.course[number].words[i].fi + "'></span>");
             }
         });
     },
@@ -180,7 +180,7 @@ var app = {
         var i = $(object).attr("data-i");
         var result = false;
 
-        var word = self.parts[number].words[i].fi;
+        var word = self.course[number].words[i].fi;
 
         if (value === word) {
             result = true;
@@ -204,7 +204,7 @@ var app = {
 
             } else {
                 td_result.html("<span class='result-fail glyphicon glyphicon-remove-sign' title='"
-                    + self.parts[number].tests[i].fi + "'></span>");
+                    + self.course[number].tests[i].fi + "'></span>");
             }
         });
     },
@@ -216,7 +216,7 @@ var app = {
         var i = $(object).attr("data-i");
         var result = false;
 
-        var word = self.parts[number].tests[i].fi;
+        var word = self.course[number].tests[i].fi;
 
         if (value === word) {
             result = true;
@@ -242,8 +242,8 @@ var app = {
     processPart: function(object, entity) {
         var self = this;
         var number = $(object).attr("data-number") - 1;
-        var part = self.parts[number];
-        var data = self.parts[number][entity];
+        var part = self.course[number];
+        var data = self.course[number][entity];
         var content = "";
         var main = $(".main");
         var first_answer = "input[name=answer_0]";
@@ -423,17 +423,13 @@ var app = {
 
         switch(self.mode) {
 
-            case "view":
-
-                // Содержание для просмотра разделов
-
-            case "test":
+            case "course":
 
                 // Содержание для тестирования по разделам
 
-                self.parts.forEach(function(part, i, parts) {
+                self.course.forEach(function(part, i, course) {
 
-                    content += "<div class='parts'>";
+                    content += "<div class='course'>";
 
                     content += "<div class='number'>" + (i + 1) + "</div>";
 
@@ -489,7 +485,7 @@ var app = {
         var selection = [];
         var list = [];
 
-        self.parts.forEach(function(part, p, parts) {
+        self.course.forEach(function(part, p, course) {
             part.words.forEach(function(word, w, words){
                 list[i++] = {
                     part: p,
@@ -565,6 +561,6 @@ var app = {
 
     dictionary: [],
 
-    parts: null
+    course: null
 
 };

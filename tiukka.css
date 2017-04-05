@@ -49,50 +49,50 @@ body {
     float: left;
 }
 
-.index .parts {
+.index .course {
     width: 100%;
     height: 32px;
     margin-bottom: 4px;
     background: rgba(242, 242, 242, 0.2);
 }
 
-.index .parts div {
+.index .course div {
     height: 32px;
     line-height: 32px;
     vertical-align: middle;
     background: rgba(242, 242, 242, 0.8);
 }
 
-.index .parts:hover div {
+.index .course:hover div {
     background: rgba(246, 246, 246, 0.8);
 }
 
-.index .parts .number {
+.index .course .number {
     width: 32px;
     text-align: center;
 }
 
-.index .parts .words {
+.index .course .words {
     width: 46px;
     text-align: center;
     margin-left: 2px;
 }
 
-.index .parts .words span:hover {
+.index .course .words span:hover {
     cursor: pointer;
 }
 
-.index .parts .tests {
+.index .course .tests {
     width: 46px;
     text-align: center;
     margin-left: 2px;
 }
 
-.index .parts .tests span:hover {
+.index .course .tests span:hover {
     cursor: pointer;
 }
 
-.index .parts .comment {
+.index .course .comment {
     width: calc(100% - 48px - 48px - 32px - 2px);
     padding-left: 12px;
     margin-left: 2px;

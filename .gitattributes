@@ -1,0 +1,8 @@
+db/* -diff -delta -crlf
+*.gif binary
+*.jpg binary
+*.png binary
+*.ods binary
+*.xls binary
+*.xlsx binary
+*.mm binary

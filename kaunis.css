@@ -45,7 +45,7 @@ body {
 
 .main { width: 60%; float: left; }
 
-.parts:hover { color: #1b6d85; }
+.course:hover { color: #1b6d85; }
 
 table.view-list,
 table.test-list { width: 600px; }
