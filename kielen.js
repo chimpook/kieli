@@ -30,7 +30,7 @@ var app = {
         self.initInputsWords();
         self.initInputsTests();
         self.initInputsDict();
-        self.activateTheme();
+        //self.activateTheme();
 
     },
     
